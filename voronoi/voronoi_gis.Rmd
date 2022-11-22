@@ -1,0 +1,297 @@
+---
+title: "Voronoi diagrams: What R they for?"
+author: "samuel gachuhi"
+date: "2022-11-21"
+output:
+  word_document: default
+  html_document: default
+---
+
+# Introduction {-}
+
+Imagine that you wanted to find out the source of a certain disease, and the closest locations to the source. What would you do? Of course a good approach would be to draw some concentric rings around each source point. Another similar, yet more sophisticated approach would be to you use voronoi polygons. In fact, using our allegory above, this was an actual exercise done by John Snow when mapping [cholera outbreaks in London](https://plus.maths.org/content/uncovering-cause-cholera). Surprised? London had cholera outbreaks back then, not like now where this disease is mostly confined to unsanitary conditions common in the global south, and recently, in some war zones as well.
+
+What the heck are [voronoi polygons](https://gisgeography.com/voronoi-diagram-thiessen-polygons/)? They can also be called Thiessen polygons, after an American meteorologist called Alfred Thiessen. But lets name the feature by giving credit to the original creator--George Voronyi. Voronoi polygons are used to show how a specific location within a polygon is closer to the sample point in that polygon than any other sample point. After the polygons are created, neighbors of a sample point are defined as any other sample point whose polygon shares a border with the chosen sample point. For example, assuming that in the map below the points represent the sources of our disease, say cholera as in Snow's story, then the polygons surrounding the points show the entire zone closest to that point compared to any other zone, including the neighbouring ones.
+
+![Voronoi Map](E:/documents/gis800_articles/voronoi/images/voronoi.png)
+
+At first glance, voronoi polygons look like fancy maps. However, they play a useful role, such as helping telcos determine the transmitter that should serve your call. Ok. That's an oversimplified example but you get the drift.
+
+The following are some of the applications of voronois as extracted from this [article](https://sciendo.com/pdf/10.2478/pcr-2018-0009) of voronoi polygons:
+
+1. Voronoi's are used to construct maps of representiveness, for example points experiencing the same precipitation.
+
+2. Voronoi diagrams are used in the research of socio-economic phenomena. Polygon's in their classic form were used to determine transportation accessibility of railway stations and other transportation stops.
+
+3. The method was used to analyze spatial patterns of distribution and accessibility of discount stores to determine the accessibility of green areas in certain large cities of Europe.
+
+4. Voronoi diagrams have been used to delimit school zones and availability of medical services in an area called Presov, Slovakia.
+
+5. In research conducted in the Beijing agglomeration, voronoi's were used to determine the zone of transit transportation.
+
+6. Voronoi polygons were used to delimit maritime zones in the Gulf of Salwa between Saudi Arabia and Qatar.
+
+## Downloading files
+
+We were not able to find a good dataset to create voronoi diagrams, therefore we decided to be creative and start from scratch (the norm rather than the exception). To give you a taste of what we will do, we will sample some altitude values in randomly selected locations from Kenya's Digital Elevation Model (DEM). Thereafter, we shall create voronoi diagrams based on this *altitude* point sample locations. Sounds easy from afar, but far from easy. 
+
+Here are the usual packages we need.
+
+```{r}
+# Packages for spatial analysis in R
+library(sp)
+library(sf)
+library(rgdal)
+library(rgeos)
+library(raster)
+
+```
+
+Let's first get the [DEM](http://datasets.wri.org/dataset/37617c74-1702-48b3-82f9-19d98b18200a/resource/6d340d80-7e95-439f-8329-2aca466cd58f/download/kesrtm.zip) we need. 
+
+```{r}
+# Load the raster we need
+kenya_srtm <- raster("E:/downloads/Dukto/kesrtm/ke_srtm/ke_srtm/hdr.adf", band = 1, values = T)
+
+```
+
+Let's see how the raster looks like.
+
+```{r}
+# Checkout the raster
+# plot(kenya_srtm)
+```
+
+For some reason, running the `plot(kenya_srtm)` generates the following error:
+
+```
+Error in setValues(outras, m) : values must be numeric, logical or factor
+```
+
+Anyway, that won't dumpen our spirits. Let's alternatively checkout the values of our `kenya_srtm` file.
+
+```{r}
+# Check the values of kenya_srtm
+kenya_srtm
+```
+
+
+We had mentioned we wanted to generate a voronoi diagram from some random altitude points. We hinted we will start from scratch. That is, sample some altitude locations from our `kenya_srtm` DEM, save this to point spatial file (not shapefile!), and thereafter create voronoi polygons from this randomly generated points. 
+
+To do the first part, creating points with altitude values, we have to do what we call point sampling.
+
+## Point Sampling {-}
+
+If you are familiar with the point sampling tool in Qgis, you are in good hands. R also requires the same parameters, not unlike those of the aforementioned Qgis plugin: 1) a point shapefile, and, 2) a raster whose value fields will be feed into the point shapefile. Just note that to create a spatial points object in R, you need an extent in which the points should be delimited in. For the extent, we shall use the [administrative shapefile of Kenya](https://www.dropbox.com/scl/fo/gtmjpy54jj22qaloz0via/h?dl=0&rlkey=evchu10bwk6b6wwf2kgenb9lv).
+
+```{r}
+# Load the administrative shapefile of Kenya
+kenya_admin <- readOGR("E:/downloads/Dukto/counties_shapefile/kenya_counties/ken_admbnda_adm0_iebc_20191031.shp")
+
+```
+
+Let's do the point sampling operation.
+
+```{r}
+pts <- spsample(kenya_admin, 200, type = "random") # type "random" for completely spatially randomly located points
+
+```
+
+Let's view our spatial points data.
+
+```{r}
+# View the points
+head(pts@coords)
+```
+
+Reading the `pts` file with the suffix `@data` will not work because it does not have any data frame whatsoever. In other words, it has no attributes. It's spatial positions can be recognised, but it's values cannot be transferred to a readable file. That's why the `@coords`, as opposed to `@data` suffix succeeded in displaying the contents of our spatial object.
+
+To ameliorate this problem, lets convert `pts` to a dataframe.
+
+```{r}
+# Convert the points `pts` to dataframe
+pts2 <- data.frame(pts@coords)
+head(pts2)
+```
+
+There you go! Like in a Cartesian plane, the `x` parameter represents the Longitudes, and likewise the `y` parameter represents the Latitudes.
+
+Now we want to convert this points dataframe to a `SpatialPointsDataframe`. The `SpatialPointsDataFrame` function will combine the best of both worlds: a spatial object containing a dataframe. However, the `SpatialPointsDataFrame` function requires a dataframe of Long-Lat attributes (order matters!), and that is what we will first derive.
+
+```{r}
+# Derive Longitude and Latitudes from pts2
+xy <- pts2[, c(1, 2)] # the columns follow after the comma (,) as in the convention [row, column]
+```
+
+
+```{r}
+# Create a SpatialPointsDataFrame object from pts2
+pts_spdf <- SpatialPointsDataFrame(xy, 
+                                   data = pts2, 
+                                   proj4string = CRS("+init=epsg:4326"))
+head(pts_spdf@data)
+```
+
+Now our humble legend `@data` suffix works! Let's plot our spatial dataframe over a web map. You will need to install the `mapview` package. Installing packages in R follows this convention:
+`install.packages("package name")`
+
+```{r}
+# Load the mapview package
+library(mapview)
+
+# View the pts_spdf variable
+mapview(pts_spdf)
+```
+
+
+Time to put the much talked point sampling operation into action. All those aforementioned actions were just foretastes to the ultimate glory. Remember (once again), that we were to extract the altitude values from our elevation raster (`kenya_srtm`), and into a spatial points object, now `pts_spdf`. Here is the moment of glory.
+
+```{r}
+# Extract raster value by points
+ras_points <- extract(kenya_srtm, pts_spdf, method = "bilinear", fun = mean, buffer = NULL, cellnumbers = F, df = T) # 'bilinear' attribute calculates the mean of the surrounding four pixels for each raster cell
+
+# Check summary statistics of our new points file
+summary(ras_points)
+```
+
+Running a brief overview of our new points file --the `ras_points`, shows that we are missing our `xy` long-lat coordinates.
+
+```{r}
+
+head(ras_points)
+```
+
+Without grumbling (by which you could be doing now), lets merge our `pts_spdf` with `ras_points` to get both the Long-lat (`xy`) and altitude (`count`) values. If you want to plot your points with `ggplot`, the `xy` fields are very important. 
+
+```{r}
+# Combine raster values with point data
+ras_points_combined <- cbind(pts_spdf, ras_points)
+
+# Check if the two variables have been merged
+head(ras_points_combined)
+
+```
+
+Good.
+
+Let's change the value of the `COUNT` field to `values` to avoid any confusion.
+
+```{r}
+# Change the "COUNT" field to read "values"
+names(ras_points_combined)[4] <- "values"
+names(ras_points_combined)  # Read the names of the fields again
+```
+
+
+## Plotting the voronoi diagrams {-}
+
+We will plot the voronoi diagram using the `ggplot` tool. Awaken it into R-eality.
+
+```{r}
+# Load the ggplot package
+library(ggplot2)
+```
+
+Remember `ggplot` only works with dataframes. We have gone through a lot to create our `ras_points_combined` object so far, but does it fit the bill for `ggplot` to work on it?
+
+```{r}
+# Check the type of our ras_points_combined object
+typeof(ras_points_combined)
+```
+
+Long story short, `s4` objects won't work inside `ggplot`. Convert it to a dataframe. Period.
+
+```{r}
+# Convert ras_points_combined to dataframe
+ras_points_combined2 <- data.frame(ras_points_combined)
+
+# Check the type of our resulting object
+typeof(ras_points_combined2)
+
+```
+
+Time to plot our `ras_points_combined2` containing Long-Lat (`xy`) coordinates with altitude data.
+
+```{r}
+# Plot ras_points_combined2
+elev_map <- ggplot(data = ras_points_combined2, aes(x, y)) + 
+  geom_point(aes(color = values), size = 1) + 
+  scale_color_gradientn(colours = terrain.colors(10)) +
+  coord_sf(default_crs = sf::st_crs(4326))
+
+elev_map
+```
+
+Just take a minute and digest the distribution of points in the above map. Take note of regions with denser distribution of points and those with less point density. This will help you in understanding how voronoi polygons convey information, such as denoting regions with higher point density as in this case.
+
+Speaking of voronoi diagrams, here is the library that plots them in R.
+
+```{r}
+# Package for plotting voronoi diagrams in R
+library(ggvoronoi)
+```
+
+The voronoi diagrams are plotted using the `geom_voronoi` function. Of course a `ggplot` object is needed on which the voronoi polygons will be overlain.
+
+```{r}
+# Plot the voronoi diagram
+elev_map + 
+  geom_voronoi(aes(fill = values), 
+               outline = kenya_admin) +
+  scale_fill_gradientn(colors = terrain.colors(10)) + 
+  labs(title = "Voronoi polygon of Kenya's Altitude")
+```
+
+Do the distribution of points match to the number of polygons appearing in a certain region? Perhaps delineating borders will make this more succinct.
+
+```{r}
+# Plot voronoi diagrams With polygon boundaries
+elev_map + 
+  geom_voronoi(aes(fill = values),  color = "gray85", linewidth = 0.01,
+               outline = kenya_admin) +
+  scale_fill_gradientn(colors = terrain.colors(10))
+```
+
+This is clearer. The eastern region has a denser network of points than towards the west and southwest. If the spatial points object used to draw the voronoi polygons was a school's dataset, you would say the eastern and northern regions have a denser coverage of schools than the west. This is just for explanation purposes. This, in our country, is far from the truth.
+
+# Conclusion {-}
+
+Voronoi polygons are helpful in knowing which locations, within a particular region, are closest to the sampling point. In this exercise, plotting of voronoi polygons was not a click-and-run exercise, unlike in most GIS softwares such a ArcGIS. The drawing of voronoi diagrams followed a linear pattern, with each step building on preceding ones until finally the data was compatible enough for R to plot voronoi polygons. The steps involved began by delimiting the extent of operations, proceeding to point sampling and finally extraction of raster values. Finally, to close this operation, the inventor of this application, George Voronyi, was himself a Ukrainain. 
+
+George grew up in Ukraine, studied in Russia (St Petersburg), taught a lot in Warsaw (Poland) and was finally buried in Zhuravka (Ukraine). The first two countries are embroiled in a tense conflict, and the third, Poland, is acting as a safe haven for panic stricken refugees. How ironic that the countries of his birth and where he received most of his tutelage are now arch-enemies, and where he lectured serves as a host to many of his fleeing countrymen. 
+
+FINIS.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
