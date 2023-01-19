@@ -1,0 +1,4 @@
+for i in list(route):
+    if i in nodes.index:
+        route_nodes2 = nodes.loc[[i]]
+        print(route_nodes2)
