@@ -14654,7 +14654,7 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>If you are a fan of Qgis or its commercial counterpart ArcPro, you know that they have a myriad of tools to perform imagery analysis. By the way, there has been, and there still is a free ESRI Massive Open Online Cource (MOOC) known as imagery analysis that gives you a headstart on raster analysis in GIS. Anyway, back to our script. Just as Qgis has several features for imagery analysis, so does python too. Today we will start simple, as this has been done before using R. We shall load and view a raster file in python. Qgis takes the crown for loading rasters easily, just click and go. But python offers no such comfort. In python, it is a long list, and sometimes verbose commands. However, the world is now becoming a programming arena, and it is good to keep up with it before it catches up with us. Just as computers took over the editing world in media, so is programming taking over GIS!</p>
+<p>If you are a fan of Qgis or its commercial counterpart ArcPro, you know that they have a myriad of tools to perform imagery analysis. By the way, there has been, and there still is a free ESRI Massive Open Online Cource (MOOC) known as &quot;Imagery analysis&quot; that gives you a headstart on raster analysis in GIS. Anyway, back to our script. Just as Qgis has several features for imagery analysis, so does python too. Today we will start simple. We shall load and view a raster file in python. Qgis takes the crown for loading rasters easily, just click and go. But python offers no such comfort. In python, it is a long to-do list, and sometimes verbose commands. However, the world is now becoming a programming arena, and it is good to keep up with it. Just as computers took over the editing world in media, so is programming taking over GIS!</p>
 
 </div>
 </div>
@@ -14666,7 +14666,7 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The satellite file we have downloaded is a Landsat 9 archive dated 2022-01-14 and of ID <strong>LC09_L1TP_170060_20220114_20220114_02_T1</strong> from Earth Explorer. However, the forthcoming steps are simple enough to be replicated with any other satellite archive. Thus, let's begin.</p>
+<p>The satellite file we have downloaded is a Landsat 9 file dated 2022-01-14 and of ID <strong>LC09_L1TP_170060_20220114_20220114_02_T1</strong> from Earth Explorer. However, the forthcoming steps are simple enough to be replicated with any other satellite archive. Thus, let's begin.</p>
 
 </div>
 </div>
@@ -14678,7 +14678,7 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Satellite files from Earth Explorer normally come as a .tar file. We like to use 7zip software to unzip this .tar file, but Python can do the trick too.</p>
+<p>Satellite files from Earth Explorer normally come as a .tar file. We like to use 7zip software to unzip this .tar files, but Python can do the trick too.</p>
 
 </div>
 </div>
@@ -14701,7 +14701,7 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>To unzip a file, the <code>zipfile</code> package is used. However, this tool proves useless when extracting a .tar file. The appropriate tool for the job is the <strong>tarfile</strong> package. You have to first import it to anaconda before calling it to jupyter.</p>
+<p>To unzip a compressed zip file, the <code>zipfile</code> package is used. However, this tool proves useless when extracting a .tar file. The appropriate tool for the job is the <strong>tarfile</strong> package. You have to first import it to anaconda before calling it to jupyter. Kindly look up in google how to install a <code>tarfile</code> package in anaconda before loading it to Jupyter. The format of installing a package into the anaconda environment applies to all packages.</p>
 
 </div>
 </div>
@@ -14714,7 +14714,7 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import tar module</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import tar module to jupyter</span>
 <span class="kn">import</span> <span class="nn">tarfile</span>
 </pre></div>
 
@@ -14875,7 +14875,7 @@ class="
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>Now let's get the list of files inside our extracted directory. One way would be to specify the path to a variable say,</p>
-<div class="highlight"><pre><span></span><span class="n">my_folder</span> <span class="o">=</span> <span class="s2">&quot;files/once/existed/here/but/virus/destroyed/them&quot;</span>
+<div class="highlight"><pre><span></span><span class="n">my_folder</span> <span class="o">=</span> <span class="s2">&quot;files/once/existed/here/but/you/deleted/them&quot;</span> <span class="c1"># The file path</span>
 </pre></div>
 <p>However, python has a way of ensuring that your paths can be easily malleable in case you have several files stored in different locations. You can concanate file paths from a root directory path using <code>os.path.join</code> as shown below.</p>
 
@@ -14890,7 +14890,7 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Here is the root path that serves as the main route</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Here is the root path that serves as the main route to many files used in this exercise</span>
 <span class="n">path</span> <span class="o">=</span> <span class="s2">"E:/documents/gis800_articles/satellite_python/"</span>
 </pre></div>
 
@@ -15036,7 +15036,7 @@ In landsat9 folder:  LC09_L1TP_170060_20220114_20220114_02_T1_VZA.TIF
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Whoa! There goes an entire list of all files that camme pre-packages in our Landsat 9 tar file from Earth Explorer. Now let's have a look at the metadata.</p>
+<p>Whoa! There goes an entire list of all files that came prepackaged in our Landsat 9 tar file from Earth Explorer. Now let's have a look at the metadata.</p>
 
 </div>
 </div>
@@ -15088,7 +15088,7 @@ In landsat9 folder:  LC09_L1TP_170060_20220114_20220114_02_T1_VZA.TIF
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Metadata is data about data. If not carefull for some you might end up on an endless printing spree. In our above case we've limited printing to just 20 of the metadata's statements. What if we wanted to look out for specific information. <code>for</code> loops are forever handy in doing these. After briefly looking over our metadata, we are curious with the band names, acquisition date, scene time and cloud cover. To test whether python is worth its salt we won't type in the entire string statements from our metadata.</p>
+<p>Metadata is data about data. If not carefull for some you might end up on an endless printing spree. In our above case we've limited printing to just 20 of the metadata's statements. What if we wanted to look out for specific information? <code>for</code> loops are forever handy in doing these. After briefly looking over our metadata, we are curious with the band names, acquisition date, scene time and cloud cover. To test whether python is worth its salt we won't type in the entire string statements from our metadata.</p>
 
 </div>
 </div>
@@ -15198,7 +15198,7 @@ In landsat9 folder:  LC09_L1TP_170060_20220114_20220114_02_T1_VZA.TIF
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Our band names are listed twice in the metadata file thus their apperance twice in the above list.</p>
+<p>Our band names are listed twice in the metadata file and thus, they also appear twice in the above list. Not our fault.</p>
 
 </div>
 </div>
@@ -15301,7 +15301,7 @@ In landsat9 folder:  LC09_L1TP_170060_20220114_20220114_02_T1_VZA.TIF
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The <code>show</code> function does what it does best: showing off.</p>
+<p>The <code>show</code> function does what it does best: <em>showing off</em>.</p>
 
 </div>
 </div>
@@ -15439,8 +15439,8 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Not bad. What do you think the deep blue feature at the bottom looks like? Just make an uninformed guess, even if you don't know the area we are working with. Refer to the Explorer if necessary for the Landsat 9 image on 2022/01/14 over Kisumu, Kenya.</p>
-<p>There is one problem though. Rarely does one work with a raster file that huge. Unless where absolutely necessary, it is recommended to crop a raster into a specific area of interest. This not only keeps the focus, but is gentle on your computer.</p>
+<p>Not bad. What do you think the deep blue feature at the bottom looks like? Just make an uninformed guess, even if you don't know the area we are working with. Refer to Earth Explorer if necessary for the Landsat 9 image on 2022/01/14 over Kisumu, Kenya.</p>
+<p>There is one problem though. Rarely does one work with a raster file that huge. Unless where absolutely necessary, it is recommended to crop a raster into a specific area of interest. This not only keeps the focus, but is gentle on your computer's finite resources.</p>
 
 </div>
 </div>
@@ -15707,8 +15707,8 @@ Datum: World Geodetic System 1984 ensemble
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Now it so happens that the masking process in python requires far more details and work than the 'Extract raster' tool in Qgis. Infact, Python will not mask a raster with a shapefile if the geometries of the latter are not in the format it wants them. We learnt this the hard way. We tried it as in the format below only for python to slap us back with an error.</p>
-<div class="highlight"><pre><span></span><span class="n">out_img</span><span class="p">,</span> <span class="n">out_transform</span> <span class="o">=</span> <span class="n">mask</span><span class="p">(</span><span class="n">raster</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">shapes</span><span class="o">=&lt;</span><span class="n">our</span> <span class="n">shapefile</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">crop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<p>Now it so happens that the masking process in python requires far more details and work than the 'Extract raster' tool in Qgis. Infact, Python will not mask a raster with a shapefile if the geometries of the latter are not in the <strong>dictionary</strong> format it wants them. We learnt this the hard way. We tried it as in the format below only for python to slap us back with an error.</p>
+<div class="highlight"><pre><span></span><span class="n">out_img</span><span class="p">,</span> <span class="n">out_transform</span> <span class="o">=</span> <span class="n">mask</span><span class="p">(</span><span class="n">raster</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">shapes</span><span class="o">=&lt;</span><span class="n">our</span> <span class="n">shapefile</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">crop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Resulted in an error</span>
 </pre></div>
 <p>This article <a href="https://automating-gis-processes.github.io/CSC18/lessons/L6/clipping-raster.html?utm_source=pocket_reader">here</a> is a life-saver of how to put in geometries in the format required by the <code>mask</code> function.</p>
 <p>It all begins with a custom function. We don't know how we could crack this if it wasn't for the above site.</p>
@@ -15742,20 +15742,21 @@ Datum: World Geodetic System 1984 ensemble
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>So what does the above function do to get what we want? Let's go through it line by line. &quot;The signature of a sophisticated technology is its simplicity&quot;, Green Arrow said this to John Stewart (Green Lantern) in the cartoon movie: &quot;Green Lantern: Beware my power&quot;. We will endeavor to stick with that line as we explain the above simple function.</p>
+<p>So what does the above function do to get what we want? Let's go through it line by line. In the cartoon movie &quot;Green Lantern: Beware my power&quot;, fellow hero Green Arrow once remarks to his counterpart, the Green Lantern (John Stewart), that, &quot;The signature of a sophisticated technology is its simplicity.&quot; We will endeavor to stick ny that as we explain the above simple function.</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">getFeatures</span><span class="p">(</span><span class="n">gdf</span><span class="p">):</span>
 </pre></div>
 <p>Functions in python are created using the <code>def</code> keyword. Next...</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
 </pre></div>
-<p>This code line tells python to import the <code>json</code> module, which is used to perform operations on <code>json</code> files.</p>
+<p>This code line commands python to import the <code>json</code> module, which is used to perform operations on <code>json</code> files. Next...</p>
 <div class="highlight"><pre><span></span><span class="k">return</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">to_json</span><span class="p">())[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;geometry&#39;</span><span class="p">]]</span>
 </pre></div>
-<p>Let's keep real simple.</p>
+<p>Let's keep it real simple.</p>
 <p><code>json.loads</code> - what does it do? Converts json strings into a python dictionary, as vividly explained by this <a href="https://www.geeksforgeeks.org/json-loads-in-python/">site</a>.</p>
 <p><code>to_json()</code> - converts a (dataframe) file into json format, as explained <a href="https://www.plus2net.com/python/pandas-to_json.php">here</a>.</p>
-<p>Let's try to explain what the return statement does in 10 year old grammar. Don start from left, don't start from right either. Start from the middle. What the return statement does is first convert our geodataframe, given the pseudonym gdf here, to a json file. This is done using ...<code>gdf.to_json()</code> method. Next, the <code>json.loads()</code> method takes over. It converts our geodataframe (gdf) now turned to json to a python dictionary of dictionaries. What remains of this process is completed by <code>['features'][0]['geometry']</code> whose work we explain below.</p>
-<p>Now, the output from <code>json.loads</code> is a dictionary of dictionaries. What with type, coordinates, id whatever. Specicically coordinates fall under the <code>geometries</code> key and this is why you see why we refer to the output as dictionary of dictionaries. Just peep two cells below, next to the <code>features</code> key and you get the idea. The <code>['features'][0]['geometry']</code> does this, go to the dictionary key <code>features</code>. We know its value is a list of dictionaries, but go to index[0] of this list. We specify 0 because there are other values at index 1 ('id'), index 2 ('properties') and so on but we don't need them. Now within index[0] get the dictionary called <code>geometry</code>. All this looks fuzzy but will be made clear in the illustration that follows.</p>
+<p>Let's try to explain what the return statement does like we would to a 10-year old. For the last line, don't start from left, don't start from right either. Start from the middle. What the return statement does is first convert our geodataframe, given the pseudonym gdf here, to a json file. This is done using ...<code>gdf.to_json()</code> method. Next, the <code>json.loads()</code> method takes over. It converts our geodataframe (gdf) --now turned to json-- to a python dictionary of dictionaries. What remains of this process is completed by <code>['features'][0]['geometry']</code> whose work we explain below.</p>
+<p>Now, the output from <code>json.loads</code> is a dictionary of dictionaries. What with <code>type</code>, <code>coordinates</code>, and <code>id</code> parameters. Specicically coordinates fall under the <code>geometries</code> key and this is why you see why we refer to the output as dictionary of dictionaries. Just peep two cells below, next to the <code>features</code> key and you get the idea. The <code>['features'][0]['geometry']</code> is in essence commanding python to do this: 1) Go to the dictionary key <code>features</code>. 2) We know its value is a list of dictionaries, but go to index[0] of this list. 3) We specify 0 because there are other values at index 1 ('id'), index 2 ('properties') and so on but we don't need them. Now within index[0] get the dictionary called <code>geometry</code>. To cap it all, enclose the final result in a list <code>[]</code>.</p>
+<p>All this looks fuzzy but will be made clear in the illustration that follows.</p>
 
 </div>
 </div>
@@ -15981,7 +15982,7 @@ Datum: World Geodetic System 1984 ensemble
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>With our coordinatess in the required format, it's time to not spare the axe in any way in clipping our raster image --<code>band6</code>.</p>
+<p>With our coordinates in the required format, it's time to not spare the axe in any way in clipping our raster image --<code>band6</code>.</p>
 
 </div>
 </div>
@@ -16011,7 +16012,7 @@ Datum: World Geodetic System 1984 ensemble
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>&quot;Why use two object names, <code>band6_crop</code> and <code>band6_transform</code>? Isn't one enough? The trick we have used here is simply store the result of mask to two object names all at once. This is just the same way you would set your phone to simultaneously store a number or a photo to both googe drive and phone storage. In fact, to make this concept naturally sink in, consider the below example.</p>
+<p>&quot;Why use two object names, <code>band6_crop</code> and <code>band6_transform</code>? Isn't one enough? The trick we have used here is simply store the result of mask to two object names all at once. This is just the same way you would set your phone to simultaneously store a number or a photo to both google drive and phone storage. In fact, to make this concept naturally sink in, consider the below example.</p>
 
 </div>
 </div>
@@ -16064,7 +16065,7 @@ Number is  4
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>We are simply storing the string 24 to two variable names, <code>number</code> and <code>num</code>. Upon printing each, they both display the string 24. We just did the same for the resulting output(s) from the <code>mask</code> function. This trick is particularly useful if you would like to use the same feature in more than one activity.</p>
+<p>We are simply storing the string 24 to two variable names, <code>number</code> and <code>num</code>. Upon printing each, they both display the string 24. We just did the same for the resulting output(s) from the <code>mask</code> function. This trick is particularly useful if you would like to use the same feature more than once in different operations.</p>
 
 </div>
 </div>
@@ -16136,8 +16137,8 @@ Number is  4
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Checking metadata for band6_crop gives you this.</p>
-<p>band6_crop.meta</p>
+<p>Checking metadata for <code>band6_crop</code> gives you this.</p>
+<p><code>band6_crop.meta</code></p>
 <p>This is what you get:</p>
 <div class="highlight"><pre><span></span><span class="ne">AttributeError</span>                            <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
 <span class="n">Input</span> <span class="n">In</span> <span class="p">[</span><span class="mi">101</span><span class="p">],</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">cell</span> <span class="n">line</span><span class="p">:</span> <span class="mi">2</span><span class="o">&gt;</span><span class="p">()</span>
@@ -16158,7 +16159,7 @@ Number is  4
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>Zilch.</p>
-<p>Let's copy the metadata of the former to the latter.</p>
+<p>Let's copy the metadata of the parent image to the latter (the child).</p>
 
 </div>
 </div>
@@ -16219,7 +16220,7 @@ Number is  4
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Now update the metadata for our cropped image with the correct values. Since our data is cropped, there is no way it can retain the same properties of the parent raster!</p>
+<p>Now update the metadata for our cropped image with the correct values.</p>
 
 </div>
 </div>
@@ -16285,7 +16286,7 @@ Number is  4
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Don't scratch your head, there's no magic done here. To clear the mist, study the structure of <code>band6_crop_meta</code> with that of band6's metadata. You will notice the metadata of <code>band6_crop_meta</code> follows that of its predecessor like so: 'driver', 'height', 'width', 'transform' and 'crs'. The only eyebrow raising function used here is <code>shape</code>. Shape simply returns the <a href="https://www.digitalocean.com/community/tutorials/python-shape-method">dimensions of a Pandas or Numpys object</a>. At the very basic level, computers read data in terms of two digits only, 0 and 1. They do the same for every data, images included, and in our case, rasters also. Even code is read in terms of 0 and 1!</p>
+<p>Don't scratch your head, there's no magic done here. To clear the mist, study the structure of <code>band6_crop_meta</code> with that of <code>band6</code>'s metadata. You will notice the metadata of <code>band6_crop_meta</code> follows that of its predecessor like so: 'driver', 'height', 'width', 'transform' and 'crs'. The only eyebrow raising function used here is <code>shape</code>. Shape simply returns the <a href="https://www.digitalocean.com/community/tutorials/python-shape-method">dimensions of a Pandas or Numpys object</a>. At the very basic level, computers read data in terms of two digits only, 0 and 1. They do the same for every data, images included, and in our case, rasters also. Even code is read in terms of 0 and 1!</p>
 
 </div>
 </div>
@@ -16297,7 +16298,7 @@ Number is  4
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>To experiment with the functionality of <code>shape</code> function. Check the following two examples. The <code>update</code> method updates <code>band6_crop_meta</code> with the metadata of our cropped image (band6_crop). The <code>shape</code> function gets the dimensions of our cropped image and inscribes them into our metadata. The below three code lines illustrate everything.</p>
+<p>To experiment with the functionality of <code>shape</code> function. Check the following two examples. The <code>update</code> method updates <code>band6_crop_meta</code> with the metadata of our cropped image (<code>band6_crop</code>). The <code>shape</code> function gets the dimensions of our cropped image and inscribes them into our metadata. The below three code lines illustrate everything.</p>
 
 </div>
 </div>
@@ -16457,7 +16458,7 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>To save our raster, use the code below. The ** which stands for other keyword arguments in python, simply tells python to store the same metadata found in the object <code>band6_crop_meta</code> to the new file in our directory.</p>
+<p>To save our raster, use the code below. The ** which stands for other keyword arguments in python, simply tells python to store the same metadata found in the object <code>band6_crop_meta</code> to the new file in our directory. Just read the contextual help for further information.</p>
 
 </div>
 </div>
@@ -16487,7 +16488,7 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h1><p>This exercise was an overview of raster operations in python. We began by hinting at a possible source of satellite images, which as per this exercise, was Earth Explorer. We used python functions to load, read, crop and plot a satellite band image. We have seen that handling rasters in python requires various packages, but most important of them is <code>rasterio</code>. Other python functionalities are not excluded since the <code>rasterio</code> package depends on them to churn out sensible outputs.</p>
+<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h1><p>This exercise was an overview of raster operations in python. We began by hinting at a possible source of satellite images, which as per this exercise, was Earth Explorer. We used python functions to load, read, crop and plot a satellite band image. We have seen that handling rasters in python requires various packages, but most important of them is <code>rasterio</code>. Finally, we created a colored raster prior to saving it.</p>
 
 </div>
 </div>
