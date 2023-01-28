@@ -1,0 +1,27 @@
+class Place():
+    """Describe our place and show it"""
+    def __init__(self, names,  longitudes, latitudes):
+        self.names = names
+        self.longitudes = longitudes
+        self.latitudes = latitudes
+
+    def dataTable(self):
+        self.dataTable = pd.DataFrame({
+            'Name': [self.names],
+            'Longitude': [self.longitudes], 
+            'Latitude': [self.latitudes]})
+        
+    def showDataframe(self):
+        print(self.dataTable)
+    
+class GeoSpatial(Place):
+    def __init__(self, names, longitudes, latitudes, crs):
+        super().__init__(names, longitudes, latitudes)
+        self.crs = crs
+        print("Name: ", self.names, "\nLongitudes: ", self.longitudes, "\nLatitudes: ", self.latitudes, "\nCRS: ", crs)
+            
+    def geoDataFrame(self):
+        self.geoDataFrame = gpd.GeoDataFrame(self.names, 
+                         geometry=gpd.points_from_xy(self.longitudes, self.latitudes), 
+                         crs=crs)
+        print(self.geoDataFrame)
