@@ -1,5 +1,5 @@
 ---
-title: "gis800_nightlights"
+title: "Getting it right with nightlights in GEE"
 author: "samuel gachuhi"
 date: "2023-02-26"
 output:
@@ -141,8 +141,8 @@ Back to the google code editor. Since our nightlights emission values ranged fro
 
 ```
 // Extract all areas with a value above 3
-
-var nightLightsAngolaHigh = nightLightsAngola.updateMask(nightLightsAngola.gte(3));
+var mask = nightLightsAngola.gte(3);
+var nightLightsAngolaHigh = nightLightsAngola.updateMask(mask);
 
 Map.addLayer(nightLightsAngolaHigh, {palette:['red']}, 'Angola cities');
 
@@ -175,7 +175,7 @@ print("Angola nightlights 1993 in km2: ", areaAngolaCities);
 We got this as the area of the brightest nightlight emissions over Angola in 1993.
 
 ```
-Angola nightlights 1993 in km2: 
+Angola nightlights 1992 in km2: 
 Object (1 property)
 stable_lights: 38485.10409409933
 
@@ -217,10 +217,10 @@ print("Min Max values for Angola nightlighs 2012: ", nightLightsAngolaInfo2012);
 Map.addLayer(nightLightsAngola2012, {palette: ['black', 'white'], min: 0, max: 8}, 'nightlights_angola 2012');
 
 // Extract all areas with a value above 3 (2012)
+var mask2012 = nightLightsAngola2012.gte(3);
+var nightLightsAngolaHigh2012 = nightLightsAngola2012.updateMask(mask2012);
 
-var nightLightsAngolaHigh2012 = nightLightsAngola2012.updateMask(nightLightsAngola.gte(3));
-
-//Map.addLayer(nightLightsAngolaHigh2012, {palette:['yellow']}, 'Angola cities 2012');
+Map.addLayer(nightLightsAngolaHigh2012, {palette:['yellow']}, 'Angola cities 2012');
 
 // Calculate Area of the zones with light intensity Above 3
 
@@ -237,16 +237,19 @@ var areaAngolaCities2012 = areaAngolaCities2012.reduceRegion(
 print("Angola nightlights 2012 in km2: ", areaAngolaCities2012);
 ```
 
-We won't print the 2012 nightlight maps here but we will mention some different statistics we got. For one, there seemed to be some higher nightlight emission from below in 2012. Nightlight emission values for this year ranged from 0 to 8. The area of the brightest nightlight emission sources above 3 was 91307 square kilometres. That is nearly triple improvement! Could the end of the war in 2002 have contributed to higher human wellbeing, urbanism, economic activity and human development?
+We won't print the 2012 nightlight maps here but we will mention some different statistics we got. For one, there seemed to be some higher nightlight emission from below in 2012. Nightlight emission values for this year ranged from 0 to 8. The area of the brightest nightlight emission sources above 3 was 232739 square kilometres. That is a sixfold improvement! Could the end of the war in 2002 have contributed to higher human wellbeing, urbanism, economic activity and human development?
 
 ```
 Min Max values for Angola nightlighs 2012: 
 Object (2 properties)
 stable_lights_max: 8
 stable_lights_min: 0
+```
+
+```
 Angola nightlights 2012 in km2: 
 Object (1 property)
-stable_lights: 91307.88625620745
+stable_lights: 232739.82489700487
 
 ```
 
