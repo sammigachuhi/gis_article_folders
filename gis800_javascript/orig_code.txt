@@ -1,0 +1,135 @@
+// Creating map of nightlights for Angola
+
+// Get the country administrative boundaries for Angola
+
+var Angola = ee.FeatureCollection('USDOS/LSIB/2017')
+  .filter(ee.Filter.eq('COUNTRY_NA', 'Angola'));
+  
+//Map.addLayer(Angola, {}, 'Angola');
+
+// Zoom to Angola layer
+Map.centerObject(Angola, 4);
+
+// Get the Nighlights image for Angola in 1993
+// Use the dataset -- DMSP OLS: Nighttime Lights Time Series Version 4, Defense Meteorological Program Operational Linescan System
+
+// Get nightlights for Angola in 1993
+
+var nightlights = ee.ImageCollection('NOAA/DMSP-OLS/NIGHTTIME_LIGHTS')
+  .select('stable_lights')
+  .filter(ee.Filter.date('1993-01-01', '1993-12-31'));
+
+var nightLightsAngola = nightlights.mean();
+
+print("Metadata: ", nightLightsAngola);
+
+var nightLightsAngola = nightLightsAngola.clipToCollection(Angola);
+
+print("Angola nightlights: ", nightLightsAngola);
+
+// Get the Min Max values for Angola Nightlights
+
+var nightLightsAngolaInfo = nightLightsAngola.reduceRegion(
+  {reducer: ee.Reducer.minMax(),
+    geometry: Angola,
+    //crs: 'EPSG:32733',
+    //scale: 30,
+    //bestEffort: true
+  });
+  
+print("Min Max values for Angola nightlighs: ", nightLightsAngolaInfo);
+  
+Map.addLayer(nightLightsAngola, {palette: ['black', 'white'], min:0, max: 7}, 'nightlights_angola'); // Except this one
+
+// Extract all areas with a value above 3.5
+
+var nightLightsAngolaHigh = nightLightsAngola.updateMask(nightLightsAngola.gte(3.5));
+
+//Map.addLayer(nightLightsAngolaHigh, {palette:['red']}, 'Angola cities');
+
+// Calculate Area of the zones with light intensity Above 3.5
+
+var areaAngolaCities = nightLightsAngolaHigh.multiply(ee.Image.pixelArea()).divide(1e6);
+
+var areaAngolaCities = areaAngolaCities.reduceRegion(
+  {reducer: ee.Reducer.sum(),
+  geometry: Angola, 
+  crs: 'EPSG:32733',
+  scale: 1000,
+  bestEffort: true
+  });
+  
+print("Angola nightlights 1992 in km2: ", areaAngolaCities);
+
+// Repeat the same process for 2012 (20 years later)
+
+// Get nightlights for Angola in 2012
+var nightlights2012 = ee.ImageCollection('NOAA/DMSP-OLS/NIGHTTIME_LIGHTS')
+  .select('stable_lights')
+  .filter(ee.Filter.date('2012-01-01', '2012-12-31'));
+  
+// Get the mean nightlights for 2012 in Angola
+var nightLightsAngola2012 = nightlights2012.mean();
+
+print("Metadata 2012: ", nightLightsAngola);
+
+var nightLightsAngola2012 = nightLightsAngola2012.clipToCollection(Angola);
+
+print("Angola nightlights in 2012: ", nightLightsAngola2012);
+
+// Get the Min Max values for Angola Nightlights
+
+var nightLightsAngolaInfo2012 = nightLightsAngola2012.reduceRegion(
+  {reducer: ee.Reducer.minMax(),
+    geometry: Angola,
+    //crs: 'EPSG:32733',
+    //scale: 1000,
+    //bestEffort: true
+  });
+  
+print("Min Max values for Angola nightlighs 2012: ", nightLightsAngolaInfo2012);
+  
+//Map.addLayer(nightLightsAngola2012, {palette: ['black', 'white'], min: 0, max: 8}, 'nightlights_angola 2012');
+
+// Extract all areas with a value above 3.5 (2012)
+
+var nightLightsAngolaHigh2012 = nightLightsAngola2012.updateMask(nightLightsAngola.gte(3.5));
+
+//Map.addLayer(nightLightsAngolaHigh2012, {palette:['yellow']}, 'Angola cities 2012');
+
+// Calculate Area of the zones with light intensity Above 3.5
+
+var areaAngolaCities2012 = nightLightsAngolaHigh2012.multiply(ee.Image.pixelArea()).divide(1e6);
+
+var areaAngolaCities2012 = areaAngolaCities2012.reduceRegion(
+  {reducer: ee.Reducer.sum(),
+  geometry: Angola, 
+  crs: 'EPSG:32733',
+  scale: 1000,
+  bestEffort: true
+  });
+  
+print("Angola nightlights 2012 in km2: ", areaAngolaCities2012);
+
+//////////////////////////////
+// Create swipe tool
+// 1993 nightlights image
+var linkedMap = ui.Map();
+linkedMap.addLayer(nightLightsAngola, {palette: ['black', 'white'], min:0, max: 7}, 'Nightlights 1993');
+
+linkedMap.addLayer(nightLightsAngola2012, {palette: ['black', 'white'], min: 0, max: 8}, 'Nightlights 2012');
+
+// Link the maps together
+var linker = ui.Map.Linker([ui.root.widgets().get(0), linkedMap]);
+
+// Create a split panel which holds the linked maps side by side
+var splitPanel = ui.SplitPanel({
+  firstPanel: linker.get(0),
+  secondPanel: linker.get(1),
+  orientation: 'horizontal',
+  wipe: true,
+  style: {stretch: 'both'}
+});
+
+// Set the split panel as the only thing in root
+ui.root.widgets().reset([splitPanel]);
