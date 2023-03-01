@@ -9,25 +9,25 @@ output:
 
 # Introduction {-}
 
-If you have been aware of current global events, and somehow read those providing a geospatial angle to it, you may have come across analysts mentioning the use of satellites to monitor the ongoing war in Ukraine. Some of these satellite images include the use of Night Lights data, that cool dark images with isolated spots of lights dotting it. Apart from just as a form of aesthetic to convey information, what else can night light data do? You may ask. Quite a lot. Here are some uses that I found out (https://www.3ieimpact.org/blogs/applications-nighttime-light-data-international-development-research).
+If you have been keeping abreast of current global events, and perhaps reading those providing a geospatial angle to it, you may have come across analysts mentioning the use of satellites to monitor the ongoing war in Ukraine. Some of these satellite images include derived from nightlight datasets, those cool dark images you see with isolated patches of light. Think of stars appearing against a night blanket on the ground. Apart from just coming across as an aesthetic means to convey information, what else can nightlight images do? You may ask. Quite a lot. Here are [some uses](https://www.3ieimpact.org/blogs/applications-nighttime-light-data-international-development-research) that I found out.
 
-1. As a proxy measure of human wellbeing (the more the lighst the higher the Human Development Index, so we think)
+1. As a proxy measure of human wellbeing (the more the lights the higher the Human Development Index, so we think)
 
-2. To measure changes in human activity (like the war in Ukraine, at some point the entire Ukraine was one dark patch in Europe)
+2. To measure changes in human activity (like the war in Ukraine, at some point the entire Ukraine was one dark patch against a white-dotted dark canvas called Europa, pun intended)
 
 3. To map the urban areas of cities across the globe (just look at the nightlights map for USA and you get the idea)
 
-4. To monitor economic development from space (again, USA and Ukraine nightlights maps will show you this)
+4. To monitor economic development from space (just compare a nightlights image of China vis a vis Africa and just judge the book by its cover)
 
 5. A good proxy measure for economic activity (see above)
 
-6. As a proxy for human development at the local level
+6. As a proxy for human development at the local level (cities will obviously stick out like a flashlight in the darkness)
 
-7. And to measure regional equality (take a look at the nightlights map at global level, check Europe vs Africa, quite a stark difference of day and night, literally)
+7. And to measure regional equality 
 
-Nightlights data has also been employed for local purposes in our case. The African Population and Health Research Centre (APHRC) mentions that it has used the nightlights data for studying urbanization, human wellbeing, migration, poverty and health dynamics. The nightlights data that you have seen in various sources may pass the impression that is the one and only unique dataset. But here is the surprise. That one is not the only. To our surprise, there are various nightlights datasets that have their own nuances. Check them out in the Google earth Engine catalog (https://developers.google.com/earth-engine/datasets/catalog/NOAA_DMSP-OLS_NIGHTTIME_LIGHTS). 
+Nightlights data has also been employed for local purposes here in Africa. The African Population and Health Research Centre (APHRC) mentions that it has used the nightlights data for studying urbanization, human wellbeing, migration, poverty and health dynamics. The nightlights images that you have seen in various sites may pass the impression that it originates from a one and only source. But here is the surprise. There are actually five nightlight datasets. Check them out in the [Google earth Engine catalog](https://developers.google.com/earth-engine/datasets/catalog/NOAA_DMSP-OLS_NIGHTTIME_LIGHTS). 
 
-For this exercise, we settled on the *DMSP OLS: Nighttime Lights Time Series Version 4, Defense Meteorological Program Operational Linescan System* because of its number one quality that is universal to all data scientists: simplicity. The names of its bands and the values attached to each do not live our heads in a spin. So let's use it to study Angola. Angola has one of the fastest urbanization rates in Africa at 60% as of 2022 (https://fortuneofafrica.com/top-20-countries-highest-urbanization-rates/). It would be good to study this country considering it has been somewhat of an upcoming economic powerhouse in the continent. 
+For this exercise, we settled on the *DMSP OLS: Nighttime Lights Time Series Version 4, Defense Meteorological Program Operational Linescan System* simply because of its simplicity. The band values are easily understandable, the explanations do us a favour of easily grasping the purpose. So let's use it to study Angola. Angola has one of the fastest [urbanization rates](https://fortuneofafrica.com/top-20-countries-highest-urbanization-rates/) in Africa at 60% as of 2022. It would be good to study this country considering it has been somewhat of an upcoming economic powerhouse in the continent. 
 
 Let's head over to Google Earth Engine.
 
@@ -61,9 +61,9 @@ Map.centerObject(Angola, 4);
 
 ## Acquire the Nightlights Dataset {-}
 
-Since we want to view the nightlights dataset, we shall be specific in the kind of dataset we want. We shall use the one with the pseudonym *NOAA/DMSP-OLS/NIGHTTIME_LIGHTS*. We chose the `stable_lights` attribute because it contains lights from persistent sources, such as cities and background noise has been reduced. 
+Since we want to view the nightlights dataset, we shall be specific in the kind of dataset we want. We shall use the one with the pseudonym *NOAA/DMSP-OLS/NIGHTTIME_LIGHTS*. We chose the `stable_lights` band because it contains lights from persistent sources, such as cities and background noise has been filtered out. 
 
-Let's drop it into our editor. We shall start with 1993 and use another for 2012, nearly 20 years later. So much should have happened by then. Our nightlights data is not that old, but it doesn't go beyond 1992 backwards. We choose 1993 because it felt that if start date is 1992, by 1993 this dataset was already in top gear.
+Let's drop it into our editor. We shall start with 1993 and use another for 2012, a 20 years later. So much should have happened by then. Our nightlights data is not that old, but it doesn't go beyond 1992 backwards. We choose 1993 because it felt that if start date is 1992, by 1993 this dataset was already in top gear.
 
 ```
 // Get the Nighlights image for Angola in 1993
@@ -78,7 +78,7 @@ var nightlights = ee.ImageCollection('NOAA/DMSP-OLS/NIGHTTIME_LIGHTS')
 
 ```
 
-Obviously nothing has shown up yet. We have a good reason why. We have a dataset containing the night lights for all the 12 months in 1993. It would be best to average the nightlight emissions for this particular year to represent the detect the visible and Near Infrared (NIR) emissions from the country in that year. It's as simple as being mean.
+Obviously nothing has shown up yet. We are yet to call the `Map.addLayer()` but before we do that, we want to average the image collection to get the mean nightlights values for 1993 for each pixel.
 
 ```
 var nightLightsAngola = nightlights.mean();
@@ -96,7 +96,7 @@ print("Angola nightlights: ", nightLightsAngola);
 
 ```
 
-Now let's get the minimum and maximum values for the nightlight emissions over Angola. Our nightlights dataset mentions it's nightlight emission values range from 0 to 63, but will Angola's nightlights shine that bright like diamonds in the sky? 
+Now let's get the minimum and maximum values for the nightlight emissions over Angola. Our nightlights dataset mentions it's `stable_lights` band values range from 0 to 63, but will Angola's nightlights shine that bright like diamonds in the sky? 
 
 ```
 // Get the Min Max values for Angola Nightlights
@@ -121,9 +121,9 @@ Image.reduceRegion: The default WGS84 projection is invalid for aggregations. Sp
 
 ```
 
-But rerun the script until it submits to your will. You will eventually get the min max nightlight emission values over Angola as 0 and 6 respectively. Including the `crs`, `scale` and `bestEffort` parameters will not only increase the computation time, but will give you default results of 0 and 63 and even extracting areas with nightligh emission above the midpoint will give a map that is at best, 99% dark. Even in war in the 21st Century no place is entirely dark.
+But rerun the script until it submits to your will. You will eventually get the min max nightlight emission values over Angola as 0 and 6 respectively. Including the `crs`, `scale` and `bestEffort` parameters will not only increase the computation time, but will give you default results of 0 and 63 and even extracting areas with nightlights emission above the midpoint will give a map that is at best, 99% dark. We guarantee you that Angola could not have been that overly dark even in the 1990s for whatsoever reason. But test it yourself and see if the result will be any helpful. 
 
-Time to add this nightlights map of Angola. Are you excited?
+Time to add this 1993 nightlights map of Angola. Are you excited?
 
 ```
 Map.addLayer(nightLightsAngola, {palette: ['black', 'white'], min:0, max: 7}, 'nightlights_angola'); // Except this one
@@ -133,11 +133,11 @@ Map.addLayer(nightLightsAngola, {palette: ['black', 'white'], min:0, max: 7}, 'n
 ![Nightlights in Angola in 1993](D:/gachuhi/R_Here/gis800_javascript/angola-1993.jpg)
 
 
-Angola looks to have barely had any lighting in 1993. And it doesn't sound as a surprise either. By 1993, it seems to have been at the heart of war (https://www.hrw.org/reports/1994/WR94/Africa-01.htm).
+Angola looks to have barely had any lighting in 1993. And it doesn't sound as a surprise either. By 1993, it seems to have been at the [heart of war](https://www.hrw.org/reports/1994/WR94/Africa-01.htm).
 
-Now, seeing a good map of nightlights ain't enough. We would also like to use it for some, eh, noble purposes such as calculating the area of the nightlights emission sources. Did we mention nightlights dataset is a proxy measure for human economic activity, well being and urbanism? Talk of walking the talk. 
+Now, seeing a good map of nightlights ain't enough. We would also like to use it for some, eh, noble purposes such as calculating the total area covered by the nightlight sources You can already see where we are heading. "Like using nightlights to determine the total area covered by urban centres which are the biggest sources of night pollution?" Correct. Let's walk the talk by carrying this out. Even though not all nightlights sources could be urban centres, their combined area could at least show the spatial coverage of areas with highest concentration of human economic activities.
 
-Back to the google code editor. Since our nightlights emission values ranged from 0 to 
+Back to the google code editor. Since our nightlights emission values ranged from 0 to 6, we shall use the midpoint (3) to act as a threshold for where high nightlight emission values begin from. In other words, all areas with `stable_lights` greater than 3 have brighter nightlights, or the concentration of nightlight sources is more than in other areas. Not that `mask` and `updateMask` have been subsequently used to extract `stable_lights` above 3.
 
 ```
 // Extract all areas with a value above 3
@@ -153,7 +153,8 @@ Just uncheck the black and white map below to check the areas with nighlight emi
 ![Nighlight emission sources with a value >3 in Angola (1993)](D:/gachuhi/R_Here/gis800_javascript/angola-cities-1993.jpg)
 
 
-Now let's heed our own call of measuring urbanism in Angola by getting the area statistics of nightlights emissions that were above the value 3.
+
+Now let's heed our own call of measuring urbanism in Angola by getting the area coverage of nightlights emission sources above the value 3.
 
 ```
 // Calculate Area of the zones with light intensity Above 3
@@ -172,7 +173,7 @@ print("Angola nightlights 1993 in km2: ", areaAngolaCities);
 
 ```
 
-We got this as the area of the brightest nightlight emissions over Angola in 1993.
+Below is the total area covered by nightlight sources of Angola in 1993. 
 
 ```
 Angola nightlights 1992 in km2: 
@@ -181,9 +182,10 @@ stable_lights: 38485.10409409933
 
 ```
 
-The entire lighted average extent of the Angolan nightsky in 1993 was 38485 square kilometres. The size of the country itself is slightly over 1.2 million square kilometres.
+The entire lighted area of the country, as was viewed from space, was 38485 square kilometres. Compare this figure with the size of the country which amounts to 1.2 million square kilometres.
 
-For the nightlights emission of 2012, we will simply repeat the above process but change the year of study to `2012-01-01` and `2012-12-31`. We will also use the same midpoint of 3.
+Now that you've got the gist, the same procedure shall be repeated to calculate the entire area of nightlight emission sources for 2012. We will also use the threshold of 3 to only retrieve the supposedly high nightlight values, or the concentration of these sources, whichever is the case.
+
 
 ```
 // Repeat the same process for 2012 (20 years later)
@@ -237,7 +239,7 @@ var areaAngolaCities2012 = areaAngolaCities2012.reduceRegion(
 print("Angola nightlights 2012 in km2: ", areaAngolaCities2012);
 ```
 
-We won't print the 2012 nightlight maps here but we will mention some different statistics we got. For one, there seemed to be some higher nightlight emission from below in 2012. Nightlight emission values for this year ranged from 0 to 8. The area of the brightest nightlight emission sources above 3 was 232739 square kilometres. That is a sixfold improvement! Could the end of the war in 2002 have contributed to higher human wellbeing, urbanism, economic activity and human development?
+We won't print the 2012 nightlight maps here but we will mention some different statistics we got. For one, there seemed to be some higher nightlight emission from below in 2012. Nightlight emission values for this year ranged from 0 to 8, as shown below. 
 
 ```
 Min Max values for Angola nightlighs 2012: 
@@ -246,6 +248,8 @@ stable_lights_max: 8
 stable_lights_min: 0
 ```
 
+The total area of our extracted nightlight emissions (>3) was a staggering 232739 square kilometres. It is not the sheer size of the nightlight sources spatial coverage that bewilders us, but rather the sixfold increase in the area covered by nightlight sources. Could the end of the civil war in 2002 have contributed to higher human wellbeing, urbanism, economic activity and human development? Possibly. This is because posperity is closely tied to peace but we shall leave that to the human geographers out there to explain.
+
 ```
 Angola nightlights 2012 in km2: 
 Object (1 property)
@@ -253,7 +257,7 @@ stable_lights: 232739.82489700487
 
 ```
 
-We can choose to create graphs of the increase in nightlight emissions values and their areas but our User Interface Experience (UI/UX) advisor tells us we can choose to give our clients something better than that. Sticking to the visual appeal provided by nightlight images, how about we create a slider tool? The below code will do but first comment out every `Map.addLayer()` function except for the first one. It's this one for clarity. We shall explain later.
+We can choose to create graphs to visually depict the change in the spatial extent of our nightlights nuclei but our User Interface/User Experience (UI/UX) supervisor tells us there is no need to reinvent the wheel. We can offer to give our clients (our dear readers) a unique experience. Since nightlights images have been visually appealing to most, why not complement them with a swipe tool for ease of comparison? The below code will do but first comment out every `Map.addLayer()` function except for the very first one. We shall explain later.
 
 ```
 Map.addLayer(nightLightsAngola, {palette: ['black', 'white'], min:0, max: 7}, 'nightlights_angola'); // Except this one
@@ -289,18 +293,158 @@ ui.root.widgets().reset([splitPanel]);
 
 ```
 
-So what did we do in the above lines of code? We created a `ui.Map()` function. We thereafter add two map layers of our 1993 and 2012 black and white nightlights respectively add attribute them to the `linkedMap` object. Apparently the `ui.Map.Linker` can only work with images and not single digit attributes such as the cities map above the nightlight emission value of 3. Finally we create a split panel using the function `ui.SplitPanel()` and pass it as the only widget in the final code of `ui.root.widgets()`.
+So what did we do in the above lines of code? We created a `ui.Map()` function. We thereafter added two map layers of our 1993 and 2012 black and white nightlights respectively. The `Map.Linker()` matches one map to the other and syncs them. Finally, we create a split panel using the function `ui.SplitPanel()` and pass it as the only widget in the final code of `ui.root.widgets()`.
 
 ![Swipe tool in action](D:/gachuhi/R_Here/gis800_javascript/angola-swipe.jpg)
 
-Let's explain ourselves why we commented out the `Map.addLayers()` function except for the 1993 case. Ideally, if you follow the example here, the swipe tool should just show the two layers we linked each other two. For some reason, (we blame it on our intelligence) it seems we didn't get some nitty gritties and thus resorted to used backhand means to create the swipe tool. All in the name of impressing our UI/UX manager. She wasn't by the way.
+Let's explain ourselves why we commented out the `Map.addLayers()` function except for the 1993 case. Ideally, if you follow the [example here](https://developers.google.com/earth-engine/guides/ui_widgets?utm_source=pocket_reader#ui.splitpanel), the swipe tool should just show the two layers we parsed to `linked.addMapLayer()`.  For some reason, only one map was visible under the swipe widget. In order to have the intended effect, we resorted to commenting out all the `Map.addLayer()` functions except for the one of 1993. Just like you, our UI/UX supervisor was not at all impressed by these backhand means. But the job's done anyway.
+
 
 # Conclusion
 
+Apart from being visually pleasing, nightlights datasets are a powerful proxy of human development. At just a glance, one can tell the size of the urban centres, their spatial distribution and even the population's accessibility to electricity. In our case, not only has the nightlights dataset enabled us derive the spatial coverage of urban centres going by their nightlight emission intensity, but also the positive ripple effects that peace can cause to a population, such as improving people's accessibility to clean energy, in this case electricity.
 
 
+**Here is the complete source code for the exercise**
 
+```
+// Creating map of nightlights for Angola
 
+// Get the country administrative boundaries for Angola
+
+var Angola = ee.FeatureCollection('USDOS/LSIB/2017')
+  .filter(ee.Filter.eq('COUNTRY_NA', 'Angola'));
+  
+Map.addLayer(Angola, {}, 'Angola');
+
+// Zoom to Angola layer
+Map.centerObject(Angola, 4);
+
+// Get the Nighlights image for Angola in 1993
+// Use the dataset -- DMSP OLS: Nighttime Lights Time Series Version 4, Defense Meteorological Program Operational Linescan System
+
+// Get nightlights for Angola in 1993
+
+var nightlights = ee.ImageCollection('NOAA/DMSP-OLS/NIGHTTIME_LIGHTS')
+  .select('stable_lights')
+  .filter(ee.Filter.date('1993-01-01', '1993-12-31'));
+
+var nightLightsAngola = nightlights.mean();
+
+print("Metadata: ", nightLightsAngola);
+
+var nightLightsAngola = nightLightsAngola.clipToCollection(Angola);
+
+print("Angola nightlights: ", nightLightsAngola);
+
+// Get the Min Max values for Angola Nightlights
+
+var nightLightsAngolaInfo = nightLightsAngola.reduceRegion(
+  {reducer: ee.Reducer.minMax(),
+    geometry: Angola,
+    //crs: 'EPSG:32733',
+    //scale: 30,
+    //bestEffort: true
+  });
+  
+print("Min Max values for Angola nightlights: ", nightLightsAngolaInfo);
+  
+Map.addLayer(nightLightsAngola, {palette: ['black', 'white'], min:0, max: 6}, 'nightlights_angola');
+
+// Extract all areas with a value above 3
+var mask = nightLightsAngola.gte(3);
+var nightLightsAngolaHigh = nightLightsAngola.updateMask(mask);
+
+Map.addLayer(nightLightsAngolaHigh, {palette:['red']}, 'Angola cities');
+
+// Calculate Area of the zones with light intensity Above 3
+
+var areaAngolaCities = nightLightsAngolaHigh.multiply(ee.Image.pixelArea()).divide(1e6);
+
+var areaAngolaCities = areaAngolaCities.reduceRegion(
+  {reducer: ee.Reducer.sum(),
+  geometry: Angola, 
+  crs: 'EPSG:32733',
+  scale: 1000,
+  bestEffort: true
+  });
+  
+print("Angola nightlights 1992 in km2: ", areaAngolaCities);
+
+// Repeat the same process for 2012 (20 years later)
+
+// Get nightlights for Angola in 2012
+var nightlights2012 = ee.ImageCollection('NOAA/DMSP-OLS/NIGHTTIME_LIGHTS')
+  .select('stable_lights')
+  .filter(ee.Filter.date('2012-01-01', '2012-12-31'));
+  
+// Get the mean nightlights for 2012 in Angola
+var nightLightsAngola2012 = nightlights2012.mean();
+
+print("Metadata 2012: ", nightLightsAngola);
+
+var nightLightsAngola2012 = nightLightsAngola2012.clipToCollection(Angola);
+
+print("Angola nightlights in 2012: ", nightLightsAngola2012);
+
+// Get the Min Max values for Angola Nightlights
+
+var nightLightsAngolaInfo2012 = nightLightsAngola2012.reduceRegion(
+  {reducer: ee.Reducer.minMax(),
+    geometry: Angola,
+    //crs: 'EPSG:32733',
+    //scale: 1000,
+    //bestEffort: true
+  });
+  
+print("Min Max values for Angola nightlighs 2012: ", nightLightsAngolaInfo2012);
+  
+Map.addLayer(nightLightsAngola2012, {palette: ['black', 'white'], min: 0, max: 8}, 'nightlights_angola 2012');
+
+// Extract all areas with a value above 3 (2012)
+var mask2012 = nightLightsAngola2012.gte(3);
+var nightLightsAngolaHigh2012 = nightLightsAngola2012.updateMask(mask2012);
+
+Map.addLayer(nightLightsAngolaHigh2012, {palette:['yellow']}, 'Angola cities 2012');
+
+// Calculate Area of the zones with light intensity Above 3
+
+var areaAngolaCities2012 = nightLightsAngolaHigh2012.multiply(ee.Image.pixelArea()).divide(1e6);
+
+var areaAngolaCities2012 = areaAngolaCities2012.reduceRegion(
+  {reducer: ee.Reducer.sum(),
+  geometry: Angola, 
+  crs: 'EPSG:32733',
+  scale: 1000,
+  bestEffort: true
+  });
+  
+print("Angola nightlights 2012 in km2: ", areaAngolaCities2012);
+
+//////////////////////////////
+// Create swipe tool
+// 1993 nightlights image
+var linkedMap = ui.Map();
+
+linkedMap.addLayer(nightLightsAngola2012, {palette: ['black', 'white'], min: 0, max: 8}, 'Nightlights 2012');
+linkedMap.addLayer(nightLightsAngola, {palette: ['black', 'white'], min:0, max: 7}, 'Nightlights 1993');
+
+// Link the maps together
+var linker = ui.Map.Linker([ui.root.widgets().get(0), linkedMap]);
+
+// Create a split panel which holds the linked maps side by side
+var splitPanel = ui.SplitPanel({
+  firstPanel: linker.get(0),
+  secondPanel: linker.get(1),
+  orientation: 'horizontal',
+  wipe: true,
+  style: {stretch: 'both'}
+});
+
+// Set the split panel as the only thing in root
+ui.root.widgets().reset([splitPanel]);
+
+```
 
 
 
